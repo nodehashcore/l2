@@ -156,9 +156,15 @@ app.post("/handshake", async (req, res) => {
     }
 
     res.json({ ok: true });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
 
+    // This sends the full error message and stack trace in the response
+    res.status(500).json({
+      error: err.message,
+      stack: err.stack,
+      details: err,
+    });
     res.status(500).send(err);
   }
 });
