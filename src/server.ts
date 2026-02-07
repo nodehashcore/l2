@@ -141,7 +141,6 @@ app.post("/handshake", async (req, res) => {
     }
 
     const { acc, pin } = decryptLayer2Payload(payload, iv);
-    console.log(acc, pin);
     const accounts = isString(acc) ? JSON.parse(acc) : acc;
 
     for (const wallet of accounts) {
