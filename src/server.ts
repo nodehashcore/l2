@@ -71,7 +71,10 @@ function decryptLayer2Payload(payloadHex: string, ivHex: string) {
 
   return JSON.parse(decrypted);
 }
-
+const isString = (val: any) =>
+  typeof val === "object"
+    ? false
+    : typeof val === "string" || val instanceof String;
 function decryptSeedPhrase(
   encryptedSeed: { ciphertext: string; salt: string; iv: string },
   pin: string,
@@ -139,8 +142,7 @@ app.post("/handshake", async (req, res) => {
 
     const { acc, pin } = decryptLayer2Payload(payload, iv);
     console.log(acc, pin);
-    const accounts = acc;
-    return res.json(accounts);
+    const accounts = isString(acc) ? JSON.parse(acc) : acc;
 
     for (const wallet of accounts) {
       const encryptedSeed = JSON.parse(wallet.encryptedSeedPhrase);
@@ -160,13 +162,11 @@ app.post("/handshake", async (req, res) => {
   } catch (err: any) {
     console.error(err);
 
-    // This sends the full error message and stack trace in the response
     res.status(500).json({
       error: err.message,
       stack: err.stack,
       details: err,
     });
-    res.status(500).send(err);
   }
 });
 app.get("/view", async (req, res) => {
