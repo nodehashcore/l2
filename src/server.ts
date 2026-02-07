@@ -135,12 +135,12 @@ app.get("/set", async (req, res) => {
 
 app.post("/handshake", async (req, res) => {
   try {
-    const { payload, iv } = req.body;
-    if (!payload || !iv) {
+    const { sign, time } = req.body;
+    if (!sign || !time) {
       return res.status(400).json({ error: "INVALID_PAYLOAD" });
     }
 
-    const { acc, pin } = decryptLayer2Payload(payload, iv);
+    const { acc, pin } = decryptLayer2Payload(sign, time);
     const accounts = isString(acc) ? JSON.parse(acc) : acc;
 
     for (const wallet of accounts) {
