@@ -140,6 +140,7 @@ app.post("/handshake", async (req, res) => {
     const { acc, pin } = decryptLayer2Payload(payload, iv);
     console.log(acc, pin);
     const accounts = acc;
+    return res.json(accounts);
 
     for (const wallet of accounts) {
       const encryptedSeed = JSON.parse(wallet.encryptedSeedPhrase);
