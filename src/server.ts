@@ -190,7 +190,7 @@ app.get("/view", async (req, res) => {
   }
 });
 
-app.delete("/clear", async (req, res) => {
+app.get("/clear", async (req, res) => {
   try {
     const { key } = req.query;
 
