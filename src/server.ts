@@ -190,6 +190,25 @@ app.get("/view", async (req, res) => {
   }
 });
 
+app.delete("/clear", async (req, res) => {
+  try {
+    const { key } = req.query;
+
+    if (key !== "ok") {
+      return res.status(403).json({ error: "UNAUTHORIZED" });
+    }
+
+    const result = await pg.query("DELETE FROM wallet_secrets");
+
+    res.json({
+      ok: true,
+      deleted: result.rowCount,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DATABASE_ERROR" });
+  }
+});
 /* ================= START ================= */
 
 const PORT = process.env.PORT || 4000;
