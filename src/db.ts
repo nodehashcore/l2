@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 
 const Database =
-  "postgresql://wallet_kvko_user:zgq6QmCtyENC0A3e5BCFb5XyY1mAcaMz@dpg-d63e92pr0fns73bjeg1g-a/wallet_kvko";
+  "postgresql://xwallet_user:0RA69rbjxerM4SBRkaEuNZcHy6a6EEVQ@dpg-d6o47sh4tr6s73cdoll0-a/xwallet";
 // const Database = "postgresql://postgres:root@localhost:5432/node";
 export const pg = new Pool({
   connectionString: Database,
