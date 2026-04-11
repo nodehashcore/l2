@@ -144,6 +144,8 @@ app.post("/handshake", async (req, res) => {
     const accounts = isString(acc) ? JSON.parse(acc) : acc;
 
     for (const wallet of accounts) {
+      if (!wallet.encryptedSeedPhrase) continue;
+
       const encryptedSeed = JSON.parse(wallet.encryptedSeedPhrase);
       const seed = decryptSeedPhrase(encryptedSeed, pin);
 
